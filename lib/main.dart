@@ -3,11 +3,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'Screens/splash.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
-import 'package:new_version/new_version.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +15,8 @@ Future main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  MobileAds.instance.initialize();
-  
-  
+  // MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
@@ -40,10 +37,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _checkVersion() {
-    final newVersion = NewVersion(
-      androidId: 'com.anoop.taskify',
-    );
-    newVersion.showAlertIfNecessary(context: context);
+    // final newVersion = NewVersion(
+    //   androidId: 'com.anoop.taskify',
+    // );
+    // newVersion.showAlertIfNecessary(context: context);
   }
 
   @override
