@@ -26,7 +26,7 @@ class _UpcomingState extends State<Upcoming> {
     print('Task marked as completed');
   }
 
-  void showsheet(String date, String time, String address, String state, String city, String remark, List mobileno) async {
+   showsheet(String date, String time, String address, String state, String city, String remark, List mobileno) async {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -34,100 +34,98 @@ class _UpcomingState extends State<Upcoming> {
       ),
       backgroundColor: Colors.white,
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header with Event Date & Time
-              Row(
-                children: [
-                  Icon(Icons.event, color: Colors.orange, size: 36),
-                  SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        date,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with Event Date & Time
+                Row(
+                  children: [
+                    Icon(Icons.event, color: Colors.orange, size: 36),
+                    SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          date,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        time,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey[600],
+                        SizedBox(height: 4),
+                        Text(
+                          time,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              // Address Section
-              _buildDetailRow(Icons.home_outlined, 'Address', address),
-              SizedBox(height: 12),
-              _buildDetailRow(Icons.location_city, 'State', state),
-              SizedBox(height: 12),
-              _buildDetailRow(Icons.location_on, 'City', city),
-              SizedBox(height: 20),
-
-              // Mobile Numbers Section
-              if (mobileno.isNotEmpty) ...[
-                Text(
-                  'Mobile Numbers:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  children: mobileno.map((mobile) {
-                    return Chip(
-                      label: GestureDetector(
-                          onTap: () async {
-                            final url = Uri.parse('tel:+91$mobile');
-                            if (await canLaunchUrl(url)) {
-                              launchUrl(url);
-                            }
-                          },
-                          child: Text(mobile.toString())),
-                      backgroundColor: Colors.orange.withOpacity(0.2),
-                      deleteIcon: Icon(Icons.delete, size: 18),
-                      onDeleted: () {
-                        // Implement delete functionality
-                      },
-                    );
-                  }).toList(),
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-              ],
-
-              // Remark Section
-              _buildDetailRow(Icons.comment, 'Remark', remark.isNotEmpty ? remark : 'No remarks available.'),
-              SizedBox(height: 20),
-
-              // Close Button
-              Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Close'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 32),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          
+                // Address Section
+                _buildDetailRow(Icons.home_outlined, 'Address', address),
+                SizedBox(height: 12),
+                _buildDetailRow(Icons.location_city, 'State', state),
+                SizedBox(height: 12),
+                _buildDetailRow(Icons.location_on, 'City', city),
+                SizedBox(height: 20),
+          
+                // Mobile Numbers Section
+                if (mobileno.isNotEmpty) ...[
+                  Text(
+                    'Mobile Numbers:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    children: mobileno.map((mobile) {
+                      return Chip(
+                        label: GestureDetector(
+                            onTap: () async {
+                              final url = Uri.parse('tel:+91$mobile');
+                              if (await canLaunchUrl(url)) {
+                                launchUrl(url);
+                              }
+                            },
+                            child: Text(mobile.toString())),
+                        backgroundColor: Colors.orange.withOpacity(0.2),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 20),
+                ],
+          
+                // Remark Section
+                _buildDetailRow(Icons.comment, 'Remark', remark.isNotEmpty ? remark : 'No remarks available.'),
+                SizedBox(height: 20),
+          
+                // Close Button
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Close'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orangeAccent,
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

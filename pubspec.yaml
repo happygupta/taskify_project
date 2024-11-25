@@ -46,6 +46,7 @@ dependencies:
   csc_picker:
   excel:
   random_string:
+  google_sign_in:
   flutter_slidable: ^3.1.1
   url_launcher: ^6.3.1
   fancy_snackbar:
