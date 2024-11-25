@@ -3,18 +3,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:taskify_project/Screens/home/add_task.dart';
+import 'package:taskify_project/service/Upcoming.dart';
+import 'package:taskify_project/service/dailyTask.dart';
 import 'Screens/splash.dart';
+import 'demo.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((value) => null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   // MobileAds.instance.initialize();
 
   runApp(const MyApp());
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: navigatorkey,
       title: 'Taskify',
       theme: ThemeData(),

@@ -1,186 +1,354 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:fancy_snackbar/fancy_snackbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:moon_design/moon_design.dart';
+import 'package:random_string/random_string.dart';
+
+import '../../Firebase/FIrebase_operation.dart';
 
 class AddTask extends StatefulWidget {
-  const AddTask({super.key});
+  final bool isEdit;
+  final Map<String , dynamic>? eventData;
+   AddTask({super.key,this.isEdit=false,required this.eventData});
 
   @override
   State<AddTask> createState() => _AddTaskState();
 }
 
 class _AddTaskState extends State<AddTask> {
-  // BannerAd? _banner;
-  final formKey = GlobalKey<FormState>();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  String? selectedDate;
+  String? selectedTime;
+  bool ispressedDate = false;
+  bool ispressedTime = false;
+  String? status='pending';
+  String statevalue = ' ';
+  String cityvalue = '';
+  List<int> mobileList = [];
+  String id = randomAlphaNumeric(10);
+  TextEditingController _remark = TextEditingController();
+  TextEditingController _address = TextEditingController();
+  TextEditingController _mobile_num = TextEditingController();
+
+  void initState(){
+    super.initState();
+    if(widget.isEdit && widget.eventData!.isNotEmpty){
+      ispressedDate=true;
+      ispressedTime=true;
+      selectedDate = widget.eventData?['date'];
+      selectedTime = widget.eventData?['time'];
+      _address.text = widget.eventData?['address'];
+      _remark.text = widget.eventData?['remark'];
+      mobileList = List<int>.from(widget.eventData?['mobile_no']);
+      statevalue = widget.eventData?['state'];
+      cityvalue = widget.eventData?['city'];
+      id = widget.eventData?['id'];  // Use the existing event ID for edit
+      status = widget.eventData?['status'];
+    }
+  }
+  Future<void> _selectime() async {
+    TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      // initialEntryMode: TimePickerEntryMode.input,
+    );
+    if (picked != null) {
+      setState(() {
+        ispressedTime = true;
+      });
+      selectedTime = '${picked.hour}:${picked.minute}';
+    }
+  }
+
+  Future<void> _addMobileNum() async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Enter your mobile number'),
+            content: MoonFormTextInput(
+              maxLength: 10,
+              height: 50,
+              controller: _mobile_num,
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return "Please enter the mobile number";
+                }
+                if (value.length < 10) {
+                  return "Please enter the correct mobile number";
+                }
+                return null;
+              },
+              onTap: () => _mobile_num.clear(),
+              leading: const Icon(
+                Icons.phone,
+                color: Colors.orange,
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  MoonFilledButton(
+                    buttonSize: MoonButtonSize.sm,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    backgroundColor: Colors.orange,
+                    leading: const Icon(MoonIcons.sport_canoeing_16_light),
+                    label: const Text("Cancel",style: TextStyle(color: Colors.white),),
+                  ),
+
+                  MoonFilledButton(
+                    buttonSize: MoonButtonSize.sm,
+                    onTap: () {
+                      mobileList.add(int.parse(_mobile_num.text));
+                      Navigator.pop(context);
+                    },
+                    backgroundColor: Colors.orange,
+                    leading: const Icon(Icons.add,color: Colors.white,),
+                    label: const Text("Add",style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> _selectdate() async {
+    DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2020),
+        lastDate: DateTime(2050));
+    if (picked != null) {
+
+      setState(() {
+        ispressedDate = true;
+        selectedDate = '${picked.day}/ ${picked.month}/ ${picked.year}';
+      });
+    }
+  }
 
   @override
   void dispose() {
-    titleController.dispose();
-    descriptionController.dispose();
-
+    // TODO: implement dispose
     super.dispose();
-  }
-
-  var time = DateTime.now();
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  Future addTaskToFirebase() async {
-    final user = await auth.currentUser!;
-    final userid = user.uid;
-    await FirebaseFirestore.instance
-        .collection('tasks')
-        .doc(userid)
-        .collection('mytasks')
-        .doc(time.toString())
-        .set({
-      'title': titleController.text,
-      'description': descriptionController.text,
-      'time': time.toString(),
-      'timestamp': time
-    });
-
-    // ignore: use_build_context_synchronously
-    FancySnackbar.showSnackbar(
-      context,
-      snackBarType: FancySnackBarType.success,
-      title: "YAY!",
-      message: "Task Updated Successfully",
-      duration: 4,
-    );
-    new Future.delayed(const Duration(seconds: 0), () {
-      Navigator.pop(context);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _createBannerAd();
-  }
-
-  void _createBannerAd() {
-    // _banner = BannerAd(
-    //     size: AdSize.fullBanner,
-    //      adUnitId: AdMobService.bannerAdUnitId,
-    //       listener: AdMobService.bannerListner,
-    //        request: const AdRequest()
-    //        ) ..load();
+    _address.dispose();
+    _remark.dispose();
+    _mobile_num.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Task'),
-        backgroundColor: Colors.deepOrange.withOpacity(0.8),
+        backgroundColor: Colors.orange,
+        centerTitle: true,
+        title: Text('Add Task',style: TextStyle(color: Colors.white,fontSize: 23,fontWeight: FontWeight.bold),),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(
-              height: 180,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                        spreadRadius: 7,
-                        blurRadius: 10,
-                        offset: Offset(1, 1),
-                        color: Colors.deepOrangeAccent.withOpacity(0.1))
-                  ]),
-              child: TextFormField(
-                controller: titleController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    hintText: 'Enter Title',
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            BorderSide(color: Colors.white, width: 1.0)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            BorderSide(color: Colors.white, width: 1.0))),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                        spreadRadius: 7,
-                        blurRadius: 10,
-                        offset: Offset(1, 1),
-                        color: Colors.deepOrangeAccent.withOpacity(0.1))
-                  ]),
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                maxLines: null,
-                controller: descriptionController,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                    hintText: 'Enter Description',
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            BorderSide(color: Colors.white, width: 1.0)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            BorderSide(color: Colors.white, width: 1.0))),
-              ),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Container(
-              width: 230,
-              height: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                gradient: const LinearGradient(
-                  colors: [Colors.redAccent, Colors.deepOrangeAccent],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20,
+            horizontal: 10,
+          ),
+          child: Form(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              child: MaterialButton(
-                minWidth: 230,
-                height: 50,
-                onPressed: () {
-                  addTaskToFirebase();
-                },
-                child: Text(
-                  "Add Task",
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
+                // TODO: Date and Time
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MoonButton(
+                      buttonSize: MoonButtonSize.sm,
+                      onTap: () {
+                        setState(() {
+                          _selectdate();
+                        });
+                      },
+                      leading: const Icon(MoonIcons.time_calendar_add_16_light),
+                      label: !ispressedDate
+                          ? Text('Select Date: ')
+                          : Text(selectedDate!),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    MoonButton(
+                      buttonSize: MoonButtonSize.sm,
+                      onTap: () {
+                        setState(() {
+                          _selectime();
+                        });
+                      },
+                      leading: const Icon(MoonIcons.time_alarm_16_regular),
+                      label: !ispressedTime
+                          ? Text('Select Time: ')
+                          : Text(selectedTime!),
+                    ),
+                  ],
                 ),
-              ),
+                SizedBox(
+                  height: 35,
+                ),
+                // TODO: Address
+                MoonFormTextInput(
+                  height: 60,
+                  controller: _address,
+                  validator: (String? value) => value != null && value.length < 5
+                      ? "The text should be longer than 5 characters."
+                      : null,
+                  onTap: () => _address.clear(),
+                  leading: Icon(Icons.home_outlined),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                // TODO: State and City
+                CSCPicker(
+                  defaultCountry: CscCountry.India,
+                  disableCountry: true,
+                  onCountryChanged: (country) {},
+                  onStateChanged: (state) {
+                    setState(() {
+                      statevalue = state ?? " ";
+                    });
+                  },
+                  onCityChanged: (city) {
+                    setState(() {
+                      cityvalue = city ?? " ";
+                    });
+                  },
+
+                  ///Dialog box radius [OPTIONAL PARAMETER]
+                  dropdownDialogRadius: 10.0,
+
+                  ///Search bar radius [OPTIONAL PARAMETER]
+                  searchBarRadius: 10.0,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                // TODO: Remark
+                MoonTextArea(
+                  controller:_remark ,
+                  hintText: 'Remark',
+                  height: 150,
+                  validator: (String? value) =>
+                      value?.length != null && value!.length < 4
+                          ? "The text should be longer than 5 characters."
+                          : null,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                // TODO: Mobile no
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: MoonOutlinedButton(
+                    buttonSize: MoonButtonSize.sm,
+                    onTap: () {
+                      _addMobileNum();
+                      _mobile_num.clear();
+                    },
+                    leading: const Icon(Icons.add,color: Colors.orange,),
+                    label: mobileList.isEmpty
+                        ? Text("Add Contact")
+                        : Text('Add More'),
+                  ),
+                ),
+                // TODO: ShowMobile Numbers
+                SizedBox(
+                  height: 20,
+                ),
+                mobileList.isNotEmpty
+                    ? Wrap(
+                        children: [
+                          for (int item in mobileList)
+                            MoonChip(
+                              chipSize: MoonChipSize.sm,
+                              leading: Icon(Icons.phone_android),
+                              label: Text('$item'),
+                              onLongPress: ()  {
+                                setState(() {
+                                  mobileList.remove(item);
+                                });
+                              },
+                            ),
+                        ],
+                      )
+                    : Text(''),
+                mobileList.isNotEmpty
+                    ? Align(
+                        alignment: Alignment.centerRight,
+                        child: Text('* Long press to delete',style: TextStyle(color: Colors.orange),))
+                    : Text(''),
+                SizedBox(
+                  height: 80,
+                ),
+
+                // TODO: Submit Form
+                MoonFilledButton(
+                  width: double.infinity,
+                  buttonSize: MoonButtonSize.sm,
+                  onTap: () async {
+                    if(selectedTime!=null && selectedDate!=null && _address.text.isNotEmpty){
+                      String epochTime=(selectedDate!+selectedTime!).replaceAll(RegExp(r'[^0-9]'),'');
+                      int epochDateTime=int.parse(epochTime);
+                      Map<String, dynamic> detailsmap = {
+                        'id': id,
+                        'date': selectedDate,
+                        'time':selectedTime,
+                        'address': _address.text.toString(),
+                        'mobile_no': mobileList,
+                        'remark':_remark.text.toString(),
+                        'epochdtTm':epochDateTime,
+                        'state':statevalue,
+                         'city':cityvalue,
+                        'status':status,
+                      };
+                      if (widget.isEdit) {
+                        // If editing, update the existing document
+                        await FirebaseOperation().updateAll(detailsmap, id);
+                      } else {
+                        // If adding, create a new document
+                        await FirebaseOperation().AddDetails(detailsmap, id);
+                      }
+
+                      setState(() {
+                        _remark.clear();
+                        _address.clear();
+                        selectedTime='';
+                        selectedDate='';
+                        statevalue=" ";
+                        cityvalue=" ";
+                        ispressedTime=false;
+                        ispressedDate=false;
+                        mobileList.clear();
+                      });
+                    }else{
+                      FancySnackbar.showSnackbar(
+                        context,
+                        snackBarType: FancySnackBarType.error,
+                        title: "Please fill all the fields",
+                        message: "",
+                        duration: 4,
+                      );
+                    }
+                  },
+                  backgroundColor: Colors.orange,
+                  label: const Text("Submit",style: TextStyle(color: Colors.white),),
+                ),
+              ],
             ),
-          ]),
+          ),
         ),
       ),
-      // bottomNavigationBar: _banner == null
-      //     ? Container()
-      //     : Container(
-      //         margin: const EdgeInsets.only(bottom: 12),
-      //         height: 52,
-      //         child: AdWidget(ad: _banner!),
-      //       ),
     );
   }
 }

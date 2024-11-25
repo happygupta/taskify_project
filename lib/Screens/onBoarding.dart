@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboard/flutter_onboard.dart';
+import 'package:taskify_project/Screens/home/add_task.dart';
+import 'package:taskify_project/service/dailyTask.dart';
 import 'Login/login.dart';
 import 'home/home.dart';
 
@@ -94,7 +96,7 @@ class Onboarding extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   return HomePage();
                 } else {
-                  return Login();
+                  return Dailytask();
                 }
               }
               )
@@ -119,11 +121,5 @@ final List<OnBoardModel> onBoardData = [
     description:
         "You can easily track your daily progress and perform your tasks efficiently",
     imgUrl: 'assets/gif2.gif',
-  ),
-  const OnBoardModel(
-    title: "Get Notified Instantly",
-    description:
-        "You get notifications of your task and track your daily work on this platform",
-    imgUrl: 'assets/gif3.gif',
   ),
 ];

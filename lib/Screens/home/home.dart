@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.deepOrange,
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddTask()));
+              context, MaterialPageRoute(builder: (context) => AddTask(eventData: {},)));
         },
       ),
     );

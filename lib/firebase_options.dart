@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,39 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAFZclufZ8252HUGc0ReoC-naQAgSn2mZU',
-    appId: '1:887469627935:web:1c86c144155210667d932a',
-    messagingSenderId: '887469627935',
-    projectId: 'taskify-6b0cb',
-    authDomain: 'taskify-6b0cb.firebaseapp.com',
-    storageBucket: 'taskify-6b0cb.appspot.com',
+    apiKey: 'AIzaSyC-zP3wifZGH8x7OsKQg-APkv7Q6ABjF4A',
+    appId: '1:1064992372008:web:131081cc18799e72394c1d',
+    messagingSenderId: '1064992372008',
+    projectId: 'taskify-ebec8',
+    authDomain: 'taskify-ebec8.firebaseapp.com',
+    storageBucket: 'taskify-ebec8.firebasestorage.app',
+    measurementId: 'G-46K7EW2VPH',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBDoKW7NJRMvr5NuMDgdPI0GA9hzLpzdDs',
-    appId: '1:887469627935:android:28359c71854c2fdd7d932a',
-    messagingSenderId: '887469627935',
-    projectId: 'taskify-6b0cb',
-    storageBucket: 'taskify-6b0cb.appspot.com',
+    apiKey: 'AIzaSyA0UTFbEikiZ-bKbTES52QFE7VAstwYSfU',
+    appId: '1:1064992372008:android:e0d818c0ee615239394c1d',
+    messagingSenderId: '1064992372008',
+    projectId: 'taskify-ebec8',
+    storageBucket: 'taskify-ebec8.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBT-OFlOK_sv5awD5-IXHxfBhrjpR5sWgY',
-    appId: '1:887469627935:ios:90e0f5f43c42a4ad7d932a',
-    messagingSenderId: '887469627935',
-    projectId: 'taskify-6b0cb',
-    storageBucket: 'taskify-6b0cb.appspot.com',
-    iosClientId: '887469627935-ifmmavedup5961qoclnm542902958trh.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAIOjqy6P7hkBPq1kIGKDqhAoZgfMFAnFU',
+    appId: '1:1064992372008:ios:775206fd255aab54394c1d',
+    messagingSenderId: '1064992372008',
+    projectId: 'taskify-ebec8',
+    storageBucket: 'taskify-ebec8.firebasestorage.app',
     iosBundleId: 'com.example.taskifyProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBT-OFlOK_sv5awD5-IXHxfBhrjpR5sWgY',
-    appId: '1:887469627935:ios:90e0f5f43c42a4ad7d932a',
-    messagingSenderId: '887469627935',
-    projectId: 'taskify-6b0cb',
-    storageBucket: 'taskify-6b0cb.appspot.com',
-    iosClientId: '887469627935-ifmmavedup5961qoclnm542902958trh.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAIOjqy6P7hkBPq1kIGKDqhAoZgfMFAnFU',
+    appId: '1:1064992372008:ios:775206fd255aab54394c1d',
+    messagingSenderId: '1064992372008',
+    projectId: 'taskify-ebec8',
+    storageBucket: 'taskify-ebec8.firebasestorage.app',
     iosBundleId: 'com.example.taskifyProject',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyC-zP3wifZGH8x7OsKQg-APkv7Q6ABjF4A',
+    appId: '1:1064992372008:web:10ef7eb95cc96903394c1d',
+    messagingSenderId: '1064992372008',
+    projectId: 'taskify-ebec8',
+    authDomain: 'taskify-ebec8.firebaseapp.com',
+    storageBucket: 'taskify-ebec8.firebasestorage.app',
+    measurementId: 'G-W5Z7L13898',
+  );
+
 }
