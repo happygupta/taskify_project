@@ -41,21 +41,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC-zP3wifZGH8x7OsKQg-APkv7Q6ABjF4A',
-    appId: '1:1064992372008:web:131081cc18799e72394c1d',
-    messagingSenderId: '1064992372008',
-    projectId: 'taskify-ebec8',
-    authDomain: 'taskify-ebec8.firebaseapp.com',
-    storageBucket: 'taskify-ebec8.firebasestorage.app',
-    measurementId: 'G-46K7EW2VPH',
+    apiKey: 'AIzaSyCzqxFEAuyGgzCMIEdb22iLwcrCgykmWx4',
+    appId: '1:18642625755:web:83890323f93f75f3af58fe',
+    messagingSenderId: '18642625755',
+    projectId: 'testing-8ba69',
+    authDomain: 'testing-8ba69.firebaseapp.com',
+    storageBucket: 'testing-8ba69.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA0UTFbEikiZ-bKbTES52QFE7VAstwYSfU',
-    appId: '1:1064992372008:android:e0d818c0ee615239394c1d',
-    messagingSenderId: '1064992372008',
-    projectId: 'taskify-ebec8',
-    storageBucket: 'taskify-ebec8.firebasestorage.app',
+    apiKey: 'AIzaSyDOGh9bJU1ulzRGyziwCFw_XoUkOCaMJt0',
+    appId: '1:18642625755:android:3a4428a5af47e54aaf58fe',
+    messagingSenderId: '18642625755',
+    projectId: 'testing-8ba69',
+    storageBucket: 'testing-8ba69.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

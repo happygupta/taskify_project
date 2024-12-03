@@ -3,11 +3,9 @@ import 'package:fancy_snackbar/fancy_snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:taskify_project/Screens/home/description.dart';
-import 'package:taskify_project/service/ad_mob.dart';
 
 import 'add_task.dart';
 
@@ -104,8 +102,8 @@ class _HomePageState extends State<HomePage> {
                   message: "",
                   duration: 4,
                 );
-                new Future.delayed(const Duration(seconds: 1), () {
-                  FirebaseAuth.instance.signOut();
+                Future.delayed(const Duration(seconds: 1), () {
+                  // FirebaseAuth.instance.signOut();
                 });
               },
             ),
@@ -125,7 +123,7 @@ class _HomePageState extends State<HomePage> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
+                return SizedBox(
                   height: 90,
                   child: Center(child: const CircularProgressIndicator()),
                 );
@@ -235,16 +233,20 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 10,
+        backgroundColor: Colors.deepOrange,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddTask(
+                        eventData: {},
+                      )));
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
           size: 30,
         ),
-        backgroundColor: Colors.deepOrange,
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddTask(eventData: {},)));
-        },
       ),
     );
   }
